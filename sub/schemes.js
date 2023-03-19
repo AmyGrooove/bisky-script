@@ -64,12 +64,13 @@ const AnimeInfoSchema = new mongoose.Schema({
             .replace(/<(?!br\s*\/?)[^>]*>/gi, "")
             .replace(/<br\s[^>]*>/gi, "<br>")
             .replace(/\[[^\]]*\]/g, "")
+            .replace(/\r\n/g, "<br>")
         : null,
   },
   screenshots: [
     {
       type: String,
-      set: (value) => (value ? value.slice(0, -15).substring(29) : null),
+      set: (value) => value.slice(0, -15).substring(29),
     },
   ],
   videos: [

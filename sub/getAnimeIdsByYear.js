@@ -30,6 +30,10 @@ const getAnimeIdsByYear = async (from, to) => {
     }
   }
 
+  if (!fs.existsSync("./json_results")) {
+    fs.mkdirSync("./json_results", { recursive: true });
+  }
+
   const fileName = `./json_results/animesIds_${
     to ? from + "_" + to : from
   }.json`;

@@ -17,6 +17,10 @@ const updateByQuery = async (arrIds) => {
   try {
     const newAnimes = await parseAnime(arrIds);
 
+    if (!fs.existsSync("./json_results")) {
+      fs.mkdirSync("./json_results", { recursive: true });
+    }
+
     let fileNumber = 1;
     let fileName = `./json_results/updateByQuery_${fileNumber}.json`;
     while (fs.existsSync(fileName)) {
