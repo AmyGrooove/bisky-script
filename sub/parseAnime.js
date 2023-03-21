@@ -64,8 +64,12 @@ const parseAnime = async (shikiAnimes, count = 0) => {
         count !== undefined ? ++count + "/" + shikiAnimes.length : "parsed",
       );
     } catch (error) {
-      console.log("delay... " + error.message);
-      failParse.push(animeId);
+      if (error.code === "ERR_BAD_REQUEST") {
+        console.log("ERROR anime: " + animeId + " not found");
+      } else {
+        console.log("delay... " + error.message);
+        failParse.push(animeId);
+      }
 
       await new Promise((res) => setTimeout(res, 5000));
     }
