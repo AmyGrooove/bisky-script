@@ -2,6 +2,7 @@
   "scripts": {
     "ShikiParse": "node ./main/shikiParse.js 2023 2030",
     "UpdateAnimes": "node ./main/updateAnimes.js",
+    "NewAnimes": "node ./main/updateAnimes.js new",
     "AdditionalParse": "node ./main/additionalParse.js"
   },
   "dependencies": {
