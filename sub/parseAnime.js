@@ -1,26 +1,26 @@
-const axios = require("axios");
+const axios = require("axios")
 
-const SHIKI_ANIME_API = "https://shikimori.one/api/animes/";
+const SHIKI_ANIME_API = "https://shikimori.one/api/animes/"
 
 const parseAnime = async (shikiAnimes, count = 0) => {
-  const successParse = [];
-  const failParse = [];
+  const successParse = []
+  const failParse = []
 
   for (const animeId of shikiAnimes) {
     try {
-      await new Promise((res) => setTimeout(res, 1000));
+      await new Promise((res) => setTimeout(res, 1000))
 
       const singlePage = await axios
         .get(SHIKI_ANIME_API + animeId)
-        .then((response) => response.data);
+        .then((response) => response.data)
 
       const screenshots = await axios
         .get(SHIKI_ANIME_API + animeId + "/screenshots")
-        .then((response) => response.data.map((el) => el.original));
+        .then((response) => response.data.map((el) => el.original))
 
       const relations = await axios
         .get(SHIKI_ANIME_API + animeId + "/related")
-        .then((response) => response.data);
+        .then((response) => response.data)
 
       successParse.push({
         shiki_id: singlePage.id,
@@ -58,26 +58,26 @@ const parseAnime = async (shikiAnimes, count = 0) => {
             }),
           ),
         },
-      });
+      })
 
       console.log(
         count !== undefined ? ++count + "/" + shikiAnimes.length : "parsed",
-      );
+      )
     } catch (error) {
       if (error.code !== "ERR_BAD_REQUEST") {
-        failParse.push(animeId);
+        failParse.push(animeId)
       }
-      console.log("delay... " + error.message + ". animeId: " + animeId);
+      console.log("delay... " + error.message + ". animeId: " + animeId)
 
-      await new Promise((res) => setTimeout(res, 5000));
+      await new Promise((res) => setTimeout(res, 5000))
     }
   }
 
   if (failParse.length !== 0) {
-    return successParse.concat(await parseAnime(failParse, count));
+    return successParse.concat(await parseAnime(failParse, count))
   } else {
-    return successParse;
+    return successParse
   }
-};
+}
 
-module.exports = parseAnime;
+module.exports = parseAnime

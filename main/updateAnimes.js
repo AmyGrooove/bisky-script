@@ -1,15 +1,15 @@
-const getUpdateIds = require("../sub/getUpdateIds");
-const getNewIds = require("../sub/getNewIds");
-const updateByQuery = require("../sub/updateByQuery");
+const getUpdateIds = require("../sub/getUpdateIds")
+const getNewIds = require("../sub/getNewIds")
+const updateByQuery = require("../sub/updateByQuery")
 
 const updateAnimes = async () => {
   const animesIds =
-    process.argv[2] === "new" ? await getNewIds() : await getUpdateIds();
+    process.argv[2] === "new" ? await getNewIds() : await getUpdateIds()
 
-  await updateByQuery(animesIds);
+  await updateByQuery(animesIds)
 
-  console.log("end");
-  process.exit();
-};
+  console.log("end")
+  process.exit()
+}
 
-updateAnimes();
+updateAnimes()

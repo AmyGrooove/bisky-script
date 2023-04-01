@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const AnimeInfoSchema = new mongoose.Schema({
   shiki_id: { type: Number, required: true, unique: true },
@@ -6,8 +6,8 @@ const AnimeInfoSchema = new mongoose.Schema({
     type: [String],
     required: true,
     set: (value) => {
-      const [first, second, ...sortArr] = Array.from(new Set(value));
-      return [first, second, ...sortArr.sort()].filter((item) => item !== null);
+      const [first, second, ...sortArr] = Array.from(new Set(value))
+      return [first, second, ...sortArr.sort()].filter((item) => item !== null)
     },
   },
   poster: {
@@ -89,14 +89,14 @@ const AnimeInfoSchema = new mongoose.Schema({
     },
     animes: [{ link_id: Number, relation: { en: String, ru: String } }],
   },
-});
+})
 
 const PlatformSchema = new mongoose.Schema({
   platform_id: { type: Number, required: true, unique: true },
   name: String,
   icon: String,
   url: String,
-});
+})
 
 const GenresSchema = new mongoose.Schema({
   genre_id: { type: Number, required: true, unique: true },
@@ -105,7 +105,7 @@ const GenresSchema = new mongoose.Schema({
     ru: String,
   },
   type: String,
-});
+})
 
 const StudiosSchema = new mongoose.Schema({
   studio_id: { type: Number, required: true, unique: true },
@@ -114,11 +114,11 @@ const StudiosSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
     set: (value) => (value ? value.slice(0, -15).substring(25) : null),
   },
-});
+})
 
 module.exports = {
   AnimeInfoSchema,
   PlatformSchema,
   GenresSchema,
   StudiosSchema,
-};
+}
