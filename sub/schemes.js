@@ -89,6 +89,7 @@ const AnimeInfoSchema = new mongoose.Schema({
     },
     animes: [{ link_id: Number, relation: { en: String, ru: String } }],
   },
+  updateDate: { type: Date, required: true },
 })
 
 const PlatformSchema = new mongoose.Schema({

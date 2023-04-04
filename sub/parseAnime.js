@@ -58,6 +58,7 @@ const parseAnime = async (shikiAnimes, count = 0) => {
             }),
           ),
         },
+        updateDate: new Date(),
       })
 
       console.log(
