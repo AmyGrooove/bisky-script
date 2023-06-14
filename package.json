@@ -1,13 +1,15 @@
 {
+  "type": "module",
   "scripts": {
-    "ShikiParse": "node ./main/shikiParse.js 2023 2030",
-    "UpdateAnimes": "node ./main/updateAnimes.js",
-    "NewAnimes": "node ./main/updateAnimes.js new",
-    "AdditionalParse": "node ./main/additionalParse.js"
+    "build": "rimraf .build && yarn tsc",
+    "lint:fix": "yarn eslint ./src --fix"
   },
-  "dependencies": {
-    "dotenv": "^16.0.3",
-    "mongoose": "^7.0.1",
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.11",
+    "@typescript-eslint/parser": "^5.59.11",
+    "eslint": "^8.42.0",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3"
   }
