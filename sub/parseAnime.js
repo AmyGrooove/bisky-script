@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const SHIKI_ANIME_API = "https://shikimori.one/api/animes/"
+const SHIKI_ANIME_API = "https://shikimori.me/api/animes/"
 
 const parseAnime = async (shikiAnimes, count = 0) => {
   const successParse = []

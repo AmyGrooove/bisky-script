@@ -1,7 +1,7 @@
 const axios = require("axios")
 const fs = require("fs")
 
-const SHIKI_ANIME_API = "https://shikimori.one/api/animes?limit=50&season="
+const SHIKI_ANIME_API = "https://shikimori.me/api/animes?limit=50&season="
 
 const getAnimeIdsByYear = async (from, to) => {
   let page = 1

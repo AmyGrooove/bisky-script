@@ -5,7 +5,7 @@ const axios = require("axios")
 
 const Schemes = require("./schemes")
 
-const SHIKI_ANIME_API = "https://shikimori.one/api/animes?limit=50&status="
+const SHIKI_ANIME_API = "https://shikimori.me/api/animes?limit=50&status="
 
 mongoose.connect(
   Boolean(process.env.UPDATE_ALL) ? process.env.PROD_URL : process.env.DEV_URL,
