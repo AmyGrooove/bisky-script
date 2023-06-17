@@ -1,18 +1,13 @@
-import { createConnection } from "mongoose"
+import { connect, model } from "mongoose"
 import { GenresSchema } from "../schemes/genres.js"
 import { StudiosSchema } from "../schemes/studios.js"
-import { DEV_URL, PROD_URL, SHIKI_API, UPDATE_ALL } from "../utils/constants.js"
+import { MONGO_URL, SHIKI_API } from "../utils/constants.js"
 import axios from "axios"
 import { ShikiGenres, ShikiStudios } from "../interfaces/shiki.js"
 
-const devDB = createConnection(DEV_URL)
-const prodDB = createConnection(PROD_URL)
-
-const GenresDEV = devDB.model("Genres", GenresSchema, "Genres")
-const GenresPROD = prodDB.model("Genres", GenresSchema, "Genres")
-
-const StudiosDEV = devDB.model("Studios", StudiosSchema, "Studios")
-const StudiosPROD = prodDB.model("Studios", StudiosSchema, "Studios")
+connect(MONGO_URL)
+const StudiosModel = model("Genres", GenresSchema, "Genres")
+const GenresModel = model("Studios", StudiosSchema, "Studios")
 
 const additionalParse = async () => {
   const genresArr = (
@@ -64,13 +59,8 @@ const additionalParse = async () => {
     }
   })
 
-  await GenresDEV.bulkWrite(operations1)
-  await StudiosDEV.bulkWrite(operations2)
-
-  if (UPDATE_ALL) {
-    await GenresPROD.bulkWrite(operations1)
-    await StudiosPROD.bulkWrite(operations2)
-  }
+  await StudiosModel.bulkWrite(operations1)
+  await GenresModel.bulkWrite(operations2)
 
   process.exit()
 }

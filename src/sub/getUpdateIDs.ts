@@ -1,22 +1,20 @@
-import { createConnection } from "mongoose"
+import { connect, model } from "mongoose"
 import { AnimeInfoSchema } from "../schemes/animeInfo.js"
-import { DEV_URL } from "../utils/constants.js"
+import { MONGO_URL } from "../utils/constants.js"
 
-const devDB = createConnection(DEV_URL)
-
-const modelDEV = devDB.model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
+connect(MONGO_URL)
+const AnimeModel = model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
 
 export const getUpdateIDs = async () => {
-  const updatesIds = await modelDEV
-    .find({
-      $or: [
-        {
-          status: "anons",
-          "dates.aired_on": { $ne: null, $lte: new Date() },
-        },
-        { status: "ongoing", "episodes.next_episode_at": { $lte: new Date() } },
-      ],
-    })
+  const updatesIds = await AnimeModel.find({
+    $or: [
+      {
+        status: "anons",
+        "dates.aired_on": { $ne: null, $lte: new Date() },
+      },
+      { status: "ongoing", "episodes.next_episode_at": { $lte: new Date() } },
+    ],
+  })
     .select({ shiki_id: 1, _id: 0, dates: 1 })
     .lean()
     .exec()

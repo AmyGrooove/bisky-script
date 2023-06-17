@@ -4,7 +4,7 @@
     "ShikiParse": "node ./build/main/shikiParse.js 2023 2030",
     "UpdateAnimes": "node ./build/main/updateAnimes.js",
     "NewAnimes": "node ./build/main/updateAnimes.js new",
-    "AdditionalParse": "node ../build/main/additionalParse.js",
+    "AdditionalParse": "node ./build/main/additionalParse.js",
     "build": "rimraf .build && yarn tsc",
     "lint:fix": "yarn eslint ./src --fix"
   },

@@ -1,16 +1,14 @@
-import { createConnection } from "mongoose"
+import { connect, model } from "mongoose"
 import { AnimeInfoSchema } from "../schemes/animeInfo.js"
-import { DEV_URL, SHIKI_API } from "../utils/constants.js"
+import { MONGO_URL, SHIKI_API } from "../utils/constants.js"
 import axios from "axios"
 import { ShikiPage } from "../interfaces/shiki.js"
 
-const devDB = createConnection(DEV_URL)
-
-const modelDEV = devDB.model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
+connect(MONGO_URL)
+const AnimeModel = model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
 
 export const getNewIDs = async () => {
-  const allAnons = await modelDEV
-    .find({ status: "anons" })
+  const allAnons = await AnimeModel.find({ status: "anons" })
     .select({ shiki_id: 1, _id: 0 })
     .lean()
     .exec()

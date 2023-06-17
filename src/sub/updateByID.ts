@@ -1,13 +1,10 @@
-import { createConnection } from "mongoose"
+import { connect, model } from "mongoose"
 import { AnimeInfoSchema } from "../schemes/animeInfo.js"
-import { DEV_URL, PROD_URL, UPDATE_ALL } from "../utils/constants.js"
+import { MONGO_URL } from "../utils/constants.js"
 import { createArrayAnimes } from "./createArrayAnimes.js"
 
-const devDB = createConnection(DEV_URL)
-const prodDB = createConnection(PROD_URL)
-
-const modelDEV = devDB.model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
-const modelPROD = prodDB.model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
+connect(MONGO_URL)
+const AnimeModel = model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
 
 export const updateByID = async (arrID: number[]) => {
   if (arrID.length === 0) return
@@ -15,7 +12,7 @@ export const updateByID = async (arrID: number[]) => {
   try {
     const newAnimes = await createArrayAnimes(arrID)
 
-    const operations1 = newAnimes.map((item) => {
+    const operations = newAnimes.map((item) => {
       return {
         updateOne: {
           filter: { id: item.id },
@@ -25,11 +22,7 @@ export const updateByID = async (arrID: number[]) => {
       }
     })
 
-    await modelDEV.bulkWrite(operations1)
-
-    if (UPDATE_ALL) {
-      await modelPROD.bulkWrite(operations1)
-    }
+    await AnimeModel.bulkWrite(operations)
   } catch (error: any) {
     console.log(error)
   }
