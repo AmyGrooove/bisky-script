@@ -9,7 +9,7 @@ const AnimeModel = model("AnimeInfo", AnimeInfoSchema, "AnimeInfo")
 
 export const getNewIDs = async () => {
   const allAnons = await AnimeModel.find({ status: "anons" })
-    .select({ shiki_id: 1, _id: 0 })
+    .select({ id: 1, _id: 0 })
     .lean()
     .exec()
     .then((data) => data.map((el) => el.id))

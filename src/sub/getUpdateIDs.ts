@@ -15,7 +15,7 @@ export const getUpdateIDs = async () => {
       { status: "ongoing", "episodes.next_episode_at": { $lte: new Date() } },
     ],
   })
-    .select({ shiki_id: 1, _id: 0, dates: 1 })
+    .select({ id: 1, _id: 0, dates: 1 })
     .lean()
     .exec()
     .then((data) =>

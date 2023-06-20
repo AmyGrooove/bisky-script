@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "ShikiParse": "node ./build/main/shikiParse.js 2023 2030",
+    "ShikiParse": "node ./build/main/shikiParse.js 2011 ",
     "UpdateAnimes": "node ./build/main/updateAnimes.js",
     "NewAnimes": "node ./build/main/updateAnimes.js new",
     "AdditionalParse": "node ./build/main/additionalParse.js",

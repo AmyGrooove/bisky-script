@@ -7,6 +7,7 @@ export const createArrayAnimes = async (
 ): Promise<IAnimeInfoParse[]> => {
   const successParse: IAnimeInfoParse[] = []
   const failParse: number[] = []
+  const animesCount = arrID.length + count
 
   for (const animeID of arrID) {
     try {
@@ -14,9 +15,9 @@ export const createArrayAnimes = async (
 
       successParse.push(await parseAnimeByID(animeID))
 
-      console.log(++count + "/" + arrID.length)
+      console.log(++count + "/" + animesCount)
     } catch (error: any) {
-      if (error.code !== "ERR_BAD_REQUEST") {
+      if (error.code === "ERR_BAD_REQUEST") {
         failParse.push(animeID)
       }
       console.log("delay... " + error.message + ". animeID: " + animeID)
@@ -26,6 +27,7 @@ export const createArrayAnimes = async (
   }
 
   if (failParse.length !== 0) {
+    console.log("Fails parse:")
     return successParse.concat(await createArrayAnimes(failParse, count))
   } else {
     return successParse
