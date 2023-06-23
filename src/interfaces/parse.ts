@@ -10,11 +10,11 @@ interface IAnimeInfoParse {
     count: number | null
     aired: number | null
     duration: number | null
-    next_episode_at: string | null
+    nextEpisodeAt: string | null
   }
   dates: {
-    aired_on: string | null
-    released_on: string | null
+    airedOn: string | null
+    releasedOn: string | null
   }
   rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
   description: string | null
@@ -22,11 +22,23 @@ interface IAnimeInfoParse {
   videos: string[]
   genres: number[]
   studios: number[]
-  franshise: {
+  franshice: {
     name: string
     animes: { id: number; relation: { en: string; ru: string } }[]
   }
   updateDate: Date
 }
 
-export { IAnimeInfoParse }
+interface IGenresParse {
+  linkId: {
+    anime: number | null
+    manga: number
+  }
+  name: {
+    en: string
+    ru: string
+  }
+  hentai: boolean
+}
+
+export { IAnimeInfoParse, IGenresParse }

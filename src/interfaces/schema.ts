@@ -12,11 +12,11 @@ interface IAnimeInfo extends Document {
     count: number | null
     aired: number | null
     duration: number | null
-    next_episode_at: string | null
+    nextEpisodeAt: string | null
   }
   dates: {
-    aired_on: string | null
-    released_on: string | null
+    airedOn: string | null
+    releaseOn: string | null
   }
   rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
   description: string | null
@@ -24,7 +24,7 @@ interface IAnimeInfo extends Document {
   videos: string[]
   genres: number[]
   studios: number[]
-  franshise: {
+  franshice: {
     name: string
     animes: { id: number; relation: { en: string; ru: string } }[]
   }
@@ -38,12 +38,15 @@ interface IFranshice extends Document {
 }
 
 interface IGenres extends Document {
-  id: number
+  linkId: {
+    anime: number | null
+    manga: number
+  }
   name: {
     en: string
     ru: string
   }
-  type: "anime" | "manga" | null
+  hentai: boolean
 }
 
 interface IStudios extends Document {

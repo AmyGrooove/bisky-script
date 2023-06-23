@@ -45,17 +45,17 @@ export const AnimeInfoSchema = new Schema<IAnimeInfo>(
         type: Schema.Types.Mixed,
         set: (value: number) => (value !== 0 ? value : null),
       },
-      next_episode_at: {
+      nextEpisodeAt: {
         type: Schema.Types.Mixed,
         set: (value: string) => (value ? new Date(value) : null),
       },
     },
     dates: {
-      aired_on: {
+      airedOn: {
         type: Schema.Types.Mixed,
         set: (value: string) => (value ? new Date(value) : null),
       },
-      released_on: {
+      releasedOn: {
         type: Schema.Types.Mixed,
         set: (value: string) => (value ? new Date(value) : null),
       },
@@ -84,7 +84,7 @@ export const AnimeInfoSchema = new Schema<IAnimeInfo>(
     ],
     genres: { type: [Number], ref: "Genres" },
     studios: { type: [Number], ref: "Studios" },
-    franshise: {
+    franshice: {
       name: { type: String },
       animes: [
         {

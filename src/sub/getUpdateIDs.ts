@@ -10,9 +10,9 @@ export const getUpdateIDs = async () => {
     $or: [
       {
         status: "anons",
-        "dates.aired_on": { $ne: null, $lte: new Date() },
+        "dates.airedOn": { $ne: null, $lte: new Date() },
       },
-      { status: "ongoing", "episodes.next_episode_at": { $lte: new Date() } },
+      { status: "ongoing", "episodes.nextEpisodeAt": { $lte: new Date() } },
     ],
   })
     .select({ id: 1, _id: 0, dates: 1 })
@@ -22,8 +22,8 @@ export const getUpdateIDs = async () => {
       data
         .filter(
           (el) =>
-            new Date(el.dates.aired_on || 0).getMonth() +
-              new Date(el.dates.aired_on || 0).getDate() !==
+            new Date(el.dates.airedOn || 0).getMonth() +
+              new Date(el.dates.airedOn || 0).getDate() !==
             1,
         )
         .map((el) => el.id),

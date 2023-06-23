@@ -38,11 +38,11 @@ export const parseAnimeByID = async (animeID: number) => {
       count: mainInfo.episodes,
       aired: mainInfo.episodes_aired,
       duration: mainInfo.duration,
-      next_episode_at: mainInfo.next_episode_at,
+      nextEpisodeAt: mainInfo.next_episode_at,
     },
     dates: {
-      aired_on: mainInfo.aired_on,
-      released_on: mainInfo.released_on,
+      airedOn: mainInfo.aired_on,
+      releasedOn: mainInfo.released_on,
     },
     rating: mainInfo.rating,
     description: mainInfo.description,
@@ -50,7 +50,7 @@ export const parseAnimeByID = async (animeID: number) => {
     videos: mainInfo.videos.map((el) => el.url),
     genres: mainInfo.genres.map((el) => el.id),
     studios: mainInfo.studios.map((el) => el.id),
-    franshise: {
+    franshice: {
       name: mainInfo.franchise,
       animes: relations.map((el) => ({
         id: el.anime ? el.anime.id : (el.manga.id as number),

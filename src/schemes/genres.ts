@@ -3,12 +3,15 @@ import { IGenres } from "../interfaces/schema.js"
 
 export const GenresSchema = new Schema<IGenres>(
   {
-    id: { type: Number, required: true, unique: true, ref: "AnimeInfo" },
+    linkId: {
+      anime: { type: Schema.Types.Mixed },
+      manga: { types: Number },
+    },
     name: {
       en: { type: String },
       ru: { type: String },
     },
-    type: { type: Schema.Types.Mixed, enum: ["anime", "manga", null] },
+    hentai: { type: Boolean },
   },
   { versionKey: false },
 )
