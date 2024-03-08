@@ -18,7 +18,5 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules"],
   "lib": ["esnext"],
-  "ts-node": {
-    "esm": true
-  }
+  "ts-node": { "esm": true }
 }
