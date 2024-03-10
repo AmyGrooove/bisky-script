@@ -1,8 +1,8 @@
 import { Document } from "mongoose";
 
-interface IUserSchema extends Document {
+interface IUserSchema extends Partial<Document> {
   username: string;
-  password: string;
+  passwordHash: string;
   email: string;
   avatar: string | null;
   refreshToken: string | null;

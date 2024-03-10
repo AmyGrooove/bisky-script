@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
 import { ILanguageSchema } from "./ILanguageSchema.js";
 
-interface IGenreSchema extends Document {
+interface IGenreSchema extends Partial<Document> {
   name: ILanguageSchema;
   description: ILanguageSchema;
 }

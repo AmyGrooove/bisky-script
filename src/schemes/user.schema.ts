@@ -4,7 +4,7 @@ import { IUserSchema } from "./types/IUserSchema.js";
 const UserSchema = new Schema<IUserSchema>(
   {
     username: { type: String, required: true, unique: true },
-    password: { type: String },
+    passwordHash: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     avatar: { type: String, default: null },
     refreshToken: { type: String, default: null },

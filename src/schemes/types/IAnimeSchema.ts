@@ -4,35 +4,45 @@ import { EStatus } from "./EStatus.js";
 import { ERating } from "./ERating.js";
 import { ILanguageSchema } from "./ILanguageSchema.js";
 
-interface ISingleEpisodeSchema extends Document {
-  name: ILanguageSchema;
+interface ISingleEpisodeSchema extends Partial<Document> {
+  name: string | null;
   airedAt: Date | null;
   duration: number;
 }
 
-interface ILabelsSchema extends Document {
-  en: string[];
-  ru: string[];
-  other: string[];
+interface ILabelsSchema extends Partial<Document> {
+  en: string | null;
+  ru: string | null;
+  synonyms: string[];
 }
 
-interface IOtherPlatformSchema extends Document {
-  score: number;
+interface IOtherPlatformSchema extends Partial<Document> {
   url: string;
   platform: ObjectId;
 }
 
-interface IEpisodesSchema extends Document {
+interface IEpisodesSchema extends Partial<Document> {
   count: number | null;
   singleEpisodes: ISingleEpisodeSchema[];
 }
 
-interface IDatesSchema extends Document {
+interface IDatesSchema extends Partial<Document> {
   airedOn: Date | null;
   releasedOn: Date | null;
 }
 
-interface IAnimeSchema extends Document {
+interface IRelatedAnimeSchema extends Partial<Document> {
+  base: ObjectId | null;
+  shikiId: number;
+  relation: ILanguageSchema;
+}
+
+interface IVideoSchema extends Partial<Document> {
+  name: string | null;
+  url: string;
+}
+
+interface IAnimeSchema extends Partial<Document> {
   shikiId: number;
   labels: ILabelsSchema;
   poster: string | null;
@@ -43,8 +53,9 @@ interface IAnimeSchema extends Document {
   dates: IDatesSchema;
   rating: ERating;
   description: ILanguageSchema;
+  related: IRelatedAnimeSchema[];
   screenshots: string[];
-  videos: string[];
+  videos: IVideoSchema[];
   genres: ObjectId[];
   studios: ObjectId[];
   franchise: ObjectId | null;
@@ -58,4 +69,6 @@ export type {
   IEpisodesSchema,
   IDatesSchema,
   ISingleEpisodeSchema,
+  IRelatedAnimeSchema,
+  IVideoSchema,
 };

@@ -4,7 +4,7 @@ import { IGenreSchema } from "./types/IGenreSchema.js";
 
 const GenreSchema = new Schema<IGenreSchema>(
   {
-    name: { type: LanguageSchema },
+    name: { type: LanguageSchema, default: {} },
     description: { type: LanguageSchema, default: {} },
   },
   { versionKey: false },

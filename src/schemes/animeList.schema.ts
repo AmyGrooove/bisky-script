@@ -6,13 +6,8 @@ const AnimeListSchema = new Schema<IAnimeListSchema>(
   {
     author: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     base: { type: mongoose.Types.ObjectId, ref: "Anime", required: true },
-    createTime: { type: Date, default: new Date(), required: true },
-    status: {
-      type: String,
-      enum: EStatus,
-      default: EStatus.anons,
-      required: true,
-    },
+    createTime: { type: Date, required: true },
+    status: { type: String, enum: EStatus, required: true },
   },
   { versionKey: false },
 );

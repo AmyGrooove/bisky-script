@@ -5,6 +5,7 @@ enum EKind {
   ona = "ona",
   special = "special",
   music = "music",
+  tv_special = "tv_special",
   none = "none",
 }
 

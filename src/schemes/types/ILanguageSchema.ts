@@ -1,6 +1,6 @@
 import { Document } from "mongoose";
 
-interface ILanguageSchema extends Document {
+interface ILanguageSchema extends Partial<Document> {
   en: string | null;
   ru: string | null;
 }

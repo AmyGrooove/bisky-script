@@ -1,6 +1,6 @@
 import { Document, ObjectId } from "mongoose";
 
-interface IAnimeEstimateSchema extends Document {
+interface IAnimeEstimateSchema extends Partial<Document> {
   author: ObjectId;
   base: ObjectId;
   createTime: Date;

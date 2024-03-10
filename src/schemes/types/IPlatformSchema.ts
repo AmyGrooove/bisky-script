@@ -1,16 +1,10 @@
 import { Document } from "mongoose";
 import { ILanguageSchema } from "./ILanguageSchema.js";
 
-interface ILinkSchema extends Document {
+interface IPlatformSchema extends Partial<Document> {
   name: ILanguageSchema;
-  url: string;
-}
-
-interface IPlatformSchema extends Document {
-  name: ILanguageSchema;
-  description: ILanguageSchema;
-  urls: ILinkSchema[];
+  shikiId: string;
   logo: string | null;
 }
 
-export type { IPlatformSchema, ILinkSchema };
+export type { IPlatformSchema };

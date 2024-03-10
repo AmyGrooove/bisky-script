@@ -5,8 +5,8 @@ const AnimeEstimateSchema = new Schema<IAnimeEstimateSchema>(
   {
     author: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     base: { type: mongoose.Types.ObjectId, ref: "Anime", required: true },
-    createTime: { type: Date, default: new Date(), required: true },
-    score: { type: Number, default: 0, required: true },
+    createTime: { type: Date, required: true },
+    score: { type: Number, required: true },
   },
   { versionKey: false },
 );

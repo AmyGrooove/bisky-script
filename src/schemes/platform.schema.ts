@@ -1,17 +1,11 @@
 import { Schema } from "mongoose";
 import { LanguageSchema } from "./language.schema.js";
-import { ILinkSchema, IPlatformSchema } from "./types/IPlatformSchema.js";
-
-const LinkSchema = new Schema<ILinkSchema>(
-  { name: { type: LanguageSchema }, url: { type: String, required: true } },
-  { _id: false, versionKey: false },
-);
+import { IPlatformSchema } from "./types/IPlatformSchema.js";
 
 const PlatformSchema = new Schema<IPlatformSchema>(
   {
-    name: { type: LanguageSchema },
-    description: { type: LanguageSchema },
-    urls: { type: [LinkSchema] },
+    name: { type: LanguageSchema, default: {} },
+    shikiId: { type: String, required: true, unique: true },
     logo: { type: String, default: null },
   },
   { versionKey: false },

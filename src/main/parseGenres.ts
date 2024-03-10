@@ -11,15 +11,16 @@ const parseGenres = async () => {
   try {
     const mainInfo = await axios
       .post<IGenresShiki>(SHIKI_GRAPHQL_API, {
-        query: `{
-        genres(entryType: Anime) {
-          entryType
-          id
-          kind
-          name
-          russian
+        query: `
+        {
+          genres(entryType: Anime) {
+            entryType
+            id
+            kind
+            name
+            russian
+          }
         }
-      }
       `,
       })
       .then((response) => response.data.data.genres);
