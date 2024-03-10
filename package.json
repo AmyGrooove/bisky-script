@@ -2,13 +2,12 @@
   "type": "module",
   "scripts": {
     "build": "rimraf .build && pnpm tsc",
-    "lint:fix": "pnpm eslint ./src --fix"
+    "ParseAnimesByYear": "node ./build/main/parseAnimesByYear.js 1800 2100",
+    "ParseGenres": "node ./build/main/parseGenres.js",
+    "ParseUpdateAnimes": "node ./build/main/parseUpdateAnimes.js"
   },
   "devDependencies": {
     "@types/node": "^20.11.25",
-    "@typescript-eslint/eslint-plugin": "^7.1.1",
-    "@typescript-eslint/parser": "^7.1.1",
-    "eslint": "^8.57.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"

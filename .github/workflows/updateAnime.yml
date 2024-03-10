@@ -1,0 +1,37 @@
+name: Anime update schedule
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" #(every 6th hour)
+  workflow_dispatch:
+    inputs:
+      manual_run:
+        description: "Run the script manually"
+        default: ""
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Build files
+        run: pnpm run build
+
+      - name: Run script
+        run: node ./build/main/parseUpdateAnimes.js

@@ -11,6 +11,7 @@ import { PlatformSchema } from "../schemes/platform.schema.js";
 import { StudioSchema } from "../schemes/studio.schema.js";
 import { FranchiseSchema } from "../schemes/franchise.schema.js";
 import { connect } from "mongoose";
+import { updateAnimesRelations } from "./updateAnimesRelations.js";
 
 connect(MONGO_URL);
 const AnimeModel = model("Anime", AnimeSchema, "Anime");
@@ -19,7 +20,7 @@ const PlatformModel = model("Platform", PlatformSchema, "Platform");
 const StudioModel = model("Studio", StudioSchema, "Studio");
 const FranchiseModel = model("Franchise", FranchiseSchema, "Franchise");
 
-const updateAnimes = async (animes: IAnimeShiki[]) => {
+const updateAnimes = async (animes: IAnimeShiki[] = []) => {
   try {
     const newAnimes = await Promise.all(
       animes.map(async (el) => {
@@ -168,6 +169,9 @@ const updateAnimes = async (animes: IAnimeShiki[]) => {
     }));
 
     await AnimeModel.bulkWrite(operations);
+    console.log("Database updated");
+
+    await updateAnimesRelations();
   } catch (error) {
     console.error(error);
   }

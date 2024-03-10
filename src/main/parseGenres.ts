@@ -3,6 +3,7 @@ import { IGenresShiki } from "../shikiTypes/IGenresShiki.js";
 import { MONGO_URL, SHIKI_GRAPHQL_API } from "../utils/constants.js";
 import { connect, model } from "mongoose";
 import { GenreSchema } from "../schemes/genre.schema.js";
+import { genresQuery } from "../graphqlQuery/genresQuery.js";
 
 connect(MONGO_URL);
 const GenreModel = model("Genre", GenreSchema, "Genre");
@@ -11,17 +12,7 @@ const parseGenres = async () => {
   try {
     const mainInfo = await axios
       .post<IGenresShiki>(SHIKI_GRAPHQL_API, {
-        query: `
-        {
-          genres(entryType: Anime) {
-            entryType
-            id
-            kind
-            name
-            russian
-          }
-        }
-      `,
+        query: genresQuery,
       })
       .then((response) => response.data.data.genres);
 

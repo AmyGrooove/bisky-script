@@ -1,97 +1,38 @@
 import axios from "axios";
-import { SHIKI_GRAPHQL_API } from "../utils/constants.js";
+import {
+  ERROR_DELAY_COUNT,
+  PAGE_DELAY_COUNT,
+  SHIKI_GRAPHQL_API,
+} from "../utils/constants.js";
 import { IAnimeShiki, IAnimeShikiGraph } from "../shikiTypes/IAnimeShiki.js";
+import { animesQuery } from "../graphqlQuery/animesQuery.js";
 
-const getAnimesDataByYear = async (from: number, to?: number) => {
+const getAnimesDataByYear = async (
+  from: number = new Date().getFullYear(),
+  to?: number,
+) => {
   let page = 1;
   let animeInfos: IAnimeShiki[] = [];
 
   while (true) {
     try {
-      const mainInfo = await axios
+      const newInfo = await axios
         .post<IAnimeShikiGraph>(SHIKI_GRAPHQL_API, {
-          query: `
-      {
-        animes(limit: 50, page: ${page}, season: "${
-            to ? from + "_" + to : from
-          }") {
-          id
-          name
-          russian
-          licenseNameRu
-          english
-          japanese
-          synonyms
-          kind
-          rating
-          score
-          status
-          episodes
-          episodesAired
-          franchise
-          nextEpisodeAt
-          duration
-          airedOn {
-            date
-          }
-          releasedOn {
-            date
-          }
-          url
-
-          poster {
-            originalUrl
-          }
-
-          createdAt
-
-          genres {
-            name
-          }
-          studios {
-            name
-            imageUrl
-          }
-
-          externalLinks {
-            kind
-            url
-          }
-
-          related {
-            anime {
-              id
-            }
-            relationRu
-            relationEn
-          }
-
-          videos {
-            url
-            name
-          }
-          screenshots {
-            originalUrl
-          }
-
-          description
-        }
-      }
-    `,
+          query: animesQuery(page, `season: "${to ? from + "_" + to : from}"`),
         })
         .then((response) => response.data.data.animes);
 
-      if (mainInfo.length === 0) break;
+      if (newInfo.length === 0) break;
 
-      animeInfos = [...animeInfos, ...mainInfo];
+      animeInfos = [...animeInfos, ...newInfo];
       console.log("Page: " + page);
       page++;
 
-      await new Promise((res) => setTimeout(res, 500));
+      await new Promise((res) => setTimeout(res, PAGE_DELAY_COUNT));
     } catch (error: any) {
       console.log("delay... " + error.message);
 
-      await new Promise((res) => setTimeout(res, 5000));
+      await new Promise((res) => setTimeout(res, ERROR_DELAY_COUNT));
     }
   }
 

@@ -38,6 +38,7 @@ const updateAnimesRelations = async () => {
   );
 
   await AnimeModel.bulkWrite(operations);
+  console.log("Anime connections updated");
 };
 
 export { updateAnimesRelations };
