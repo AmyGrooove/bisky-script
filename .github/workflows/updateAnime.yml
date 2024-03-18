@@ -2,7 +2,7 @@ name: Anime update schedule
 
 on:
   schedule:
-    - cron: "0 */6 * * *" #(every 6th hour)
+    - cron: "0 */2 * * *" #(every 2th hour)
   workflow_dispatch:
     inputs:
       manual_run:
@@ -13,12 +13,19 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
 
+    env:
+      SHIKI_API: ${{ secrets.SHIKI_API }}
+      SHIKI_GRAPHQL_API: ${{ secrets.SHIKI_GRAPHQL_API }}
+      MONGO_URL: ${{ secrets.MONGO_URL }}
+      ERROR_DELAY_COUNT: ${{ secrets.ERROR_DELAY_COUNT }}
+      PAGE_DELAY_COUNT: ${{ secrets.PAGE_DELAY_COUNT }}
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
 

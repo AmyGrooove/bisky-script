@@ -94,6 +94,11 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
               .exec()
           )?._id ?? null;
 
+        const newEpisodesCount =
+          Number(
+            el.status === "released" ? el.episodes : el.episodesAired + 1,
+          ) - (animeInfo?.episodes?.singleEpisodes?.length ?? 0);
+
         return {
           shikiId: Number(el.id),
           labels: {
@@ -109,22 +114,16 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
             count: el.episodes === 0 ? null : Number(el.episodes),
             singleEpisodes: [
               ...(animeInfo?.episodes?.singleEpisodes ?? []),
-              ...[
-                ...Array(
-                  Number(
-                    el.status === "released"
-                      ? el.episodes
-                      : el.episodesAired + 1,
-                  ) - (animeInfo?.episodes?.singleEpisodes.length ?? 0),
-                ),
-              ].map((_, index) => ({
-                name: null,
-                airedAt:
-                  index + 1 === el.episodesAired + 1 && el.nextEpisodeAt
-                    ? new Date(el.nextEpisodeAt)
-                    : null,
-                duration: el.duration,
-              })),
+              ...[...Array(newEpisodesCount < 0 ? 0 : newEpisodesCount)].map(
+                (_, index) => ({
+                  name: null,
+                  airedAt:
+                    index === el.episodesAired && el.nextEpisodeAt
+                      ? new Date(el.nextEpisodeAt)
+                      : null,
+                  duration: el.duration,
+                }),
+              ),
             ],
           },
           dates: {

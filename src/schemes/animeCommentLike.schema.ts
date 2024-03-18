@@ -9,7 +9,7 @@ const AnimeCommentLikeSchema = new Schema<IAnimeCommentLikeSchema>(
       ref: "AnimeComment",
       required: true,
     },
-    createTime: { type: Date, required: true },
+    createTime: { type: Date, required: true, set: () => new Date() },
     isLiked: { type: Boolean, required: true },
   },
   { versionKey: false },

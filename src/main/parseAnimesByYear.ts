@@ -3,6 +3,7 @@ import { updateAnimes } from "../sub/updateAnimes.js";
 
 const parseAnimesByYear = async () => {
   if (!process.argv[2]) throw new Error("Missing input data");
+  console.time("END. Script execution time");
 
   const animesData = await getAnimesDataByYear(
     Number(process.argv[2]),
@@ -11,7 +12,7 @@ const parseAnimesByYear = async () => {
 
   await updateAnimes(animesData);
 
-  console.log("end");
+  console.timeEnd("END. Script execution time");
   process.exit();
 };
 

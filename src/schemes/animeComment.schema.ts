@@ -5,8 +5,12 @@ const AnimeCommentSchema = new Schema<IAnimeCommentSchema>(
   {
     author: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     base: { type: mongoose.Types.ObjectId, ref: "Anime", required: true },
-    createTime: { type: Date, required: true },
-    updateTime: { type: Date, required: true },
+    createTime: {
+      type: Date,
+      required: true,
+      set: (el: Date) => el ?? new Date(),
+    },
+    updateTime: { type: Date, required: true, set: () => new Date() },
     text: { type: String, required: true },
     violations: { type: [String], default: [] },
     parent: {

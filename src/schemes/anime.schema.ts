@@ -99,7 +99,7 @@ const AnimeSchema = new Schema<IAnimeSchema>(
       ref: "Franchise",
       default: null,
     },
-    updateDate: { type: Date, required: true },
+    updateDate: { type: Date, required: true, set: () => new Date() },
   },
   { versionKey: false },
 );

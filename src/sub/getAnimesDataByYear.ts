@@ -36,7 +36,7 @@ const getAnimesDataByYear = async (
     }
   }
 
-  console.log("Animes received");
+  console.log(`Animes received (${animeInfos.length})`);
   return animeInfos;
 };
 

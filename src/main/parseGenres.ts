@@ -9,10 +9,12 @@ connect(MONGO_URL);
 const GenreModel = model("Genre", GenreSchema, "Genre");
 
 const parseGenres = async () => {
+  console.time("END. Script execution time");
+
   try {
     const mainInfo = await axios
       .post<IGenresShiki>(SHIKI_GRAPHQL_API, {
-        query: genresQuery,
+        query: genresQuery(),
       })
       .then((response) => response.data.data.genres);
 
@@ -29,7 +31,7 @@ const parseGenres = async () => {
     console.error(error);
   }
 
-  console.log("end");
+  console.timeEnd("END. Script execution time");
   process.exit();
 };
 
