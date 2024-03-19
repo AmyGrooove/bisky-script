@@ -140,7 +140,7 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
                 .replace(/\[\[(.*?)\]\]/g, "$1")
                 .replace(/\[[^\]]*]/g, "")
                 .replace(/\([^)]*\)/g, "") ?? null,
-            en: animeInfo?.description?.en,
+            en: animeInfo?.description?.en ?? null,
           },
           related: el.related
             .map((item) => ({

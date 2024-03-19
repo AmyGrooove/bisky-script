@@ -1,8 +1,8 @@
-name: Anime update schedule
+name: All anime update schedule
 
 on:
   schedule:
-    - cron: "0 */2 * * *" #(every 2th hour)
+    - cron: "0 0 * * 1" #(every Monday at midnight)
   workflow_dispatch:
     inputs:
       manual_run:
@@ -41,4 +41,4 @@ jobs:
         run: pnpm run build
 
       - name: Run script
-        run: node ./build/main/parseUpdateAnimes.js
+        run: pnpm run parseAnimesByYear
