@@ -4,12 +4,6 @@ import { EStatus } from "./EStatus.js";
 import { ERating } from "./ERating.js";
 import { ILanguageSchema } from "./ILanguageSchema.js";
 
-interface ISingleEpisodeSchema extends Partial<Document> {
-  name: string | null;
-  airedAt: Date | null;
-  duration: number;
-}
-
 interface ILabelsSchema extends Partial<Document> {
   en: string | null;
   ru: string | null;
@@ -23,7 +17,10 @@ interface IOtherPlatformSchema extends Partial<Document> {
 
 interface IEpisodesSchema extends Partial<Document> {
   count: number | null;
-  singleEpisodes: ISingleEpisodeSchema[];
+  airedCount: number | null;
+  nextEpisodeAiredDate: Date | null;
+  lastEpisodeAiredDate: Date | null;
+  duration: number | null;
 }
 
 interface IDatesSchema extends Partial<Document> {
@@ -68,7 +65,6 @@ export type {
   IOtherPlatformSchema,
   IEpisodesSchema,
   IDatesSchema,
-  ISingleEpisodeSchema,
   IRelatedAnimeSchema,
   IVideoSchema,
 };

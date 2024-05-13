@@ -4,19 +4,20 @@ import { ObjectId, model } from "mongoose";
 import { AnimeSchema } from "../schemes/anime.schema.js";
 import {
   IAnimeSchema,
-  IOtherPlatformSchema,
+  // IOtherPlatformSchema,
 } from "../schemes/types/IAnimeSchema.js";
 import { GenreSchema } from "../schemes/genre.schema.js";
-import { PlatformSchema } from "../schemes/platform.schema.js";
+// import { PlatformSchema } from "../schemes/platform.schema.js";
 import { StudioSchema } from "../schemes/studio.schema.js";
 import { FranchiseSchema } from "../schemes/franchise.schema.js";
 import { connect } from "mongoose";
 import { updateAnimesRelations } from "./updateAnimesRelations.js";
+import { checkFirstTimeMore } from "../utils/checkFirstTimeMore.js";
 
 connect(MONGO_URL);
 const AnimeModel = model("Anime", AnimeSchema, "Anime");
 const GenreModel = model("Genre", GenreSchema, "Genre");
-const PlatformModel = model("Platform", PlatformSchema, "Platform");
+// const PlatformModel = model("Platform", PlatformSchema, "Platform");
 const StudioModel = model("Studio", StudioSchema, "Studio");
 const FranchiseModel = model("Franchise", FranchiseSchema, "Franchise");
 
@@ -33,17 +34,17 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
             .exec()
         ).map((item) => item._id);
 
-        const animePlatforms: Partial<IOtherPlatformSchema>[] = (
-          await PlatformModel.find({
-            shikiId: { $in: el.externalLinks.map((item) => item.kind) },
-          })
-            .select("_id")
-            .lean()
-            .exec()
-        ).map((item, index) => ({
-          url: el.externalLinks[index].url,
-          platform: item._id,
-        }));
+        // const animePlatforms: Partial<IOtherPlatformSchema>[] = (
+        //   await PlatformModel.find({
+        //     shikiId: { $in: el.externalLinks.map((item) => item.kind) },
+        //   })
+        //     .select("_id")
+        //     .lean()
+        //     .exec()
+        // ).map((item, index) => ({
+        //   url: el.externalLinks[index].url,
+        //   platform: item._id,
+        // }));
 
         const animeInfo: Partial<IAnimeSchema> | null =
           await AnimeModel.findOne({
@@ -94,11 +95,6 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
               .exec()
           )?._id ?? null;
 
-        const newEpisodesCount =
-          Number(
-            el.status === "released" ? el.episodes : el.episodesAired + 1,
-          ) - (animeInfo?.episodes?.singleEpisodes?.length ?? 0);
-
         return {
           shikiId: Number(el.id),
           labels: {
@@ -108,23 +104,36 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
           },
           poster: el.poster?.originalUrl ?? null,
           kind: el.kind,
-          otherPlatforms: animePlatforms,
+          otherPlatforms: [],
+          // animePlatforms,
           status: el.status,
           episodes: {
             count: el.episodes === 0 ? null : Number(el.episodes),
-            singleEpisodes: [
-              ...(animeInfo?.episodes?.singleEpisodes ?? []),
-              ...[...Array(newEpisodesCount < 0 ? 0 : newEpisodesCount)].map(
-                (_, index) => ({
-                  name: null,
-                  airedAt:
-                    index === el.episodesAired && el.nextEpisodeAt
-                      ? new Date(el.nextEpisodeAt)
-                      : null,
-                  duration: el.duration,
-                }),
-              ),
-            ],
+            airedCount:
+              el.status === "released"
+                ? el.episodes
+                : el.episodesAired === 0
+                ? null
+                : Number(el.episodesAired),
+            duration:
+              el.duration === null || el.duration === 0
+                ? null
+                : Number(el.duration),
+            nextEpisodeAiredDate: el.nextEpisodeAt
+              ? new Date(el.nextEpisodeAt)
+              : null,
+            lastEpisodeAiredDate:
+              el.status === "released" &&
+              (el.releasedOn.date || el.airedOn.date)
+                ? new Date(el.releasedOn.date ?? el.airedOn.date)
+                : el.status === "anons"
+                ? null
+                : checkFirstTimeMore(
+                    el.nextEpisodeAt,
+                    animeInfo?.episodes?.nextEpisodeAiredDate,
+                  )
+                ? animeInfo?.episodes?.nextEpisodeAiredDate
+                : null,
           },
           dates: {
             airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,

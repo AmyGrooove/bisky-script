@@ -6,22 +6,12 @@ import {
   ILabelsSchema,
   IOtherPlatformSchema,
   IRelatedAnimeSchema,
-  ISingleEpisodeSchema,
   IVideoSchema,
 } from "./types/IAnimeSchema.js";
 import { EKind } from "./types/EKind.js";
 import { EStatus } from "./types/EStatus.js";
 import { ERating } from "./types/ERating.js";
 import { LanguageSchema } from "./language.schema.js";
-
-const SingleEpisodeSchema = new Schema<ISingleEpisodeSchema>(
-  {
-    name: { type: String, default: null },
-    airedAt: { type: Date, default: null },
-    duration: { type: Number, default: 0 },
-  },
-  { _id: false, versionKey: false },
-);
 
 const LabelsSchema = new Schema<ILabelsSchema>(
   {
@@ -47,7 +37,10 @@ const OtherPlatformSchema = new Schema<IOtherPlatformSchema>(
 const EpisodesSchema = new Schema<IEpisodesSchema>(
   {
     count: { type: Number, default: null },
-    singleEpisodes: { type: [SingleEpisodeSchema], default: [] },
+    airedCount: { type: Number, default: null },
+    nextEpisodeAiredDate: { type: Date, default: null },
+    lastEpisodeAiredDate: { type: Date, default: null },
+    duration: { type: Number, default: null },
   },
   { _id: false, versionKey: false },
 );

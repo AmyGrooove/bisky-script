@@ -38,10 +38,10 @@ const animesQuery = (page = 1, additionalQuery: string) => `{
       imageUrl
     }
 
-    externalLinks {
-      kind
-      url
-    }
+    # externalLinks {
+    #   kind
+    #   url
+    # }
 
     related {
       anime {
