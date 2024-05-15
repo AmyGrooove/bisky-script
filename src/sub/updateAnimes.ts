@@ -23,6 +23,8 @@ const FranchiseModel = model("Franchise", FranchiseSchema, "Franchise");
 
 const updateAnimes = async (animes: IAnimeShiki[] = []) => {
   try {
+    let newAnimesSeries = 0;
+
     const newAnimes = await Promise.all(
       animes.map(async (el) => {
         const animeGenres: ObjectId[] = (
@@ -95,6 +97,14 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
               .exec()
           )?._id ?? null;
 
+        if (
+          checkFirstTimeMore(
+            el.nextEpisodeAt,
+            animeInfo?.episodes?.nextEpisodeAiredDate,
+          )
+        )
+          newAnimesSeries++;
+
         return {
           shikiId: Number(el.id),
           labels: {
@@ -133,7 +143,7 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
                     animeInfo?.episodes?.nextEpisodeAiredDate,
                   )
                 ? animeInfo?.episodes?.nextEpisodeAiredDate
-                : null,
+                : animeInfo?.episodes?.lastEpisodeAiredDate ?? null,
           },
           dates: {
             airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
@@ -166,6 +176,12 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
           updateDate: new Date(),
         } as IAnimeSchema;
       }),
+    );
+
+    console.log(
+      newAnimesSeries === 0
+        ? "There's no new anime series"
+        : `Only so many anime have a new series out (${newAnimesSeries})`,
     );
 
     const operations = newAnimes.map((item) => ({
