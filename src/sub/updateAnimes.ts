@@ -27,14 +27,14 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
 
     const newAnimes = await Promise.all(
       animes.map(async (el) => {
-        const animeGenres: ObjectId[] = (
+        const animeGenres = (
           await GenreModel.find({
             "name.en": { $in: el.genres.map((item) => item.name) },
           })
             .select("_id")
             .lean()
             .exec()
-        ).map((item) => item._id);
+        ).map((item) => item._id) as ObjectId[];
 
         // const animePlatforms: Partial<IOtherPlatformSchema>[] = (
         //   await PlatformModel.find({
@@ -49,9 +49,7 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
         // }));
 
         const animeInfo: Partial<IAnimeSchema> | null =
-          await AnimeModel.findOne({
-            shikiId: el.id,
-          })
+          await AnimeModel.findOne({ shikiId: el.id })
             .select("episodes description")
             .lean()
             .exec();
@@ -66,14 +64,14 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
 
         await StudioModel.bulkWrite(studioOperations);
 
-        const animeStudios: ObjectId[] = (
+        const animeStudios = (
           await StudioModel.find({
             name: { $in: el.studios.map((item) => item.name) },
           })
             .select("_id")
             .lean()
             .exec()
-        ).map((item) => item._id);
+        ).map((item) => item._id) as ObjectId[];
 
         if (el.franchise) {
           const franchiseOperation = [
@@ -89,13 +87,12 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
           await FranchiseModel.bulkWrite(franchiseOperation);
         }
 
-        const animeFranchise: ObjectId | null =
-          (
-            await FranchiseModel.findOne({ shikiId: el.franchise })
-              .select("_id")
-              .lean()
-              .exec()
-          )?._id ?? null;
+        const animeFranchise = ((
+          await FranchiseModel.findOne({ shikiId: el.franchise })
+            .select("_id")
+            .lean()
+            .exec()
+        )?._id ?? null) as ObjectId | null;
 
         if (
           checkFirstTimeMore(
@@ -125,10 +122,6 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
                 : el.episodesAired === 0
                 ? null
                 : Number(el.episodesAired),
-            duration:
-              el.duration === null || el.duration === 0
-                ? null
-                : Number(el.duration),
             nextEpisodeAiredDate: el.nextEpisodeAt
               ? new Date(el.nextEpisodeAt)
               : null,
@@ -144,6 +137,10 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
                   )
                 ? animeInfo?.episodes?.nextEpisodeAiredDate
                 : animeInfo?.episodes?.lastEpisodeAiredDate ?? null,
+            duration:
+              el.duration === null || el.duration === 0
+                ? null
+                : Number(el.duration),
           },
           dates: {
             airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
@@ -153,19 +150,19 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
           },
           rating: el.rating,
           description: {
+            en: animeInfo?.description?.en ?? null,
             ru:
               el.description
                 ?.replace(/\r\n/g, "")
                 .replace(/\[\[(.*?)\]\]/g, "$1")
                 .replace(/\[[^\]]*]/g, "")
                 .replace(/\([^)]*\)/g, "") ?? null,
-            en: animeInfo?.description?.en ?? null,
           },
           related: el.related
             .map((item) => ({
               base: null,
               shikiId: item.anime?.id ? Number(item.anime?.id) : null,
-              relation: { ru: item.relationRu, en: item.relationEn },
+              relation: { en: item.relationEn, ru: item.relationRu },
             }))
             .filter((item) => item.shikiId),
           screenshots: el.screenshots.map((item) => item.originalUrl),
@@ -192,10 +189,14 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
       },
     }));
 
-    await AnimeModel.bulkWrite(operations);
-    console.log("Database updated");
+    if (operations.length > 0) {
+      await AnimeModel.bulkWrite(operations);
+      console.log(`Database updated (${operations.length})`);
 
-    await updateAnimesRelations();
+      await updateAnimesRelations();
+    } else {
+      console.log("No changes detected, database not updated");
+    }
   } catch (error) {
     console.error(error);
   }
