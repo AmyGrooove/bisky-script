@@ -45,12 +45,14 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
         //     .exec()
         // ).map((item, index) => ({
         //   url: el.externalLinks[index].url,
-        //   platform: item._id,
+        //   platform: item._id as ObjectId,
         // }));
 
         const animeInfo: Partial<IAnimeSchema> | null =
           await AnimeModel.findOne({ shikiId: el.id })
-            .select("episodes description")
+            .select(
+              "shikiId labels poster kind otherPlatforms status episodes dates rating description related screenshots videos genres studios franchise",
+            )
             .lean()
             .exec();
 
@@ -102,18 +104,23 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
         )
           newAnimesSeries++;
 
-        return {
+        const animeData = {
           shikiId: Number(el.id),
-          labels: {
-            en: el.name,
-            ru: el.russian,
-            synonyms: [el.japanese, ...el.synonyms].filter((item) => item),
+          dates: {
+            airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
+            releasedOn: el.releasedOn.date
+              ? new Date(el.releasedOn.date)
+              : null,
           },
-          poster: el.poster?.originalUrl ?? null,
-          kind: el.kind,
-          otherPlatforms: [],
-          // animePlatforms,
-          status: el.status,
+          description: {
+            en: animeInfo?.description?.en ?? null,
+            ru:
+              el.description
+                ?.replace(/\r\n/g, "")
+                .replace(/\[\[(.*?)\]\]/g, "$1")
+                .replace(/\[[^\]]*]/g, "")
+                .replace(/\([^)]*\)/g, "") ?? null,
+          },
           episodes: {
             count: el.episodes === 0 ? null : Number(el.episodes),
             airedCount:
@@ -142,22 +149,18 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
                 ? null
                 : Number(el.duration),
           },
-          dates: {
-            airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
-            releasedOn: el.releasedOn.date
-              ? new Date(el.releasedOn.date)
-              : null,
+          franchise: animeFranchise,
+          genres: animeGenres,
+          kind: el.kind,
+          labels: {
+            en: el.name,
+            ru: el.russian,
+            synonyms: [el.japanese, ...el.synonyms].filter((item) => item),
           },
+          otherPlatforms: [],
+          // animePlatforms,
+          poster: el.poster?.originalUrl ?? null,
           rating: el.rating,
-          description: {
-            en: animeInfo?.description?.en ?? null,
-            ru:
-              el.description
-                ?.replace(/\r\n/g, "")
-                .replace(/\[\[(.*?)\]\]/g, "$1")
-                .replace(/\[[^\]]*]/g, "")
-                .replace(/\([^)]*\)/g, "") ?? null,
-          },
           related: el.related
             .map((item) => ({
               base: null,
@@ -166,12 +169,25 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
             }))
             .filter((item) => item.shikiId),
           screenshots: el.screenshots.map((item) => item.originalUrl),
-          videos: el.videos.map((item) => ({ name: item.name, url: item.url })),
-          genres: animeGenres,
+          status: el.status,
           studios: animeStudios,
-          franchise: animeFranchise,
+          videos: el.videos.map((item) => ({ name: item.name, url: item.url })),
           updateDate: new Date(),
         } as IAnimeSchema;
+
+        const checkAnimeData = ["updateDate"].reduce(
+          (object: any, key) => (delete object[key], object),
+          { ...animeData },
+        );
+        const checkAnimeInfo = ["_id"].reduce(
+          (object: any, key) => (delete object[key], object),
+          { ...animeInfo },
+        );
+        checkAnimeInfo.related?.map((item: any) => (item.base = null));
+
+        return JSON.stringify(checkAnimeData) === JSON.stringify(checkAnimeInfo)
+          ? null
+          : animeData;
       }),
     );
 
@@ -181,13 +197,15 @@ const updateAnimes = async (animes: IAnimeShiki[] = []) => {
         : `Only so many anime have a new series out (${newAnimesSeries})`,
     );
 
-    const operations = newAnimes.map((item) => ({
-      updateOne: {
-        filter: { shikiId: item.shikiId },
-        update: item as Record<string, any>,
-        upsert: true,
-      },
-    }));
+    const operations = newAnimes
+      .filter((item) => item !== null)
+      .map((item) => ({
+        updateOne: {
+          filter: { shikiId: item?.shikiId },
+          update: item as Record<string, any>,
+          upsert: true,
+        },
+      }));
 
     if (operations.length > 0) {
       await AnimeModel.bulkWrite(operations);
